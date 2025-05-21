@@ -1,0 +1,79 @@
+using TMPro;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class SceneChangerWithSound : MonoBehaviour
+{
+    public string sceneName; // Name of the scene to load
+    public string PreviousSceneName;
+    public AudioClip clickSound; // The sound to play
+    private AudioSource audioSource;
+    private void Start()
+    {
+        // Get the AudioSource component attached to the GameObject
+        audioSource = GetComponent<AudioSource>();
+       
+        
+    }
+
+    // This function will be called when the button is clicked
+    public void OnButtonClickNext()
+    {
+        // Play the click sound
+        if (clickSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(clickSound);
+        }
+
+        // Invoke the scene change after the sound is played (wait for sound duration)
+        Invoke("ChangeScene", clickSound.length);
+    }
+    public void OnButtonClickPrevious()
+    {
+        // Play the click sound
+        if (clickSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(clickSound);
+        }
+
+        // Invoke the scene change after the sound is played (wait for sound duration)
+        Invoke("PreviousScene", clickSound.length);
+    }
+
+
+    // Change to the specified scene
+    private void ChangeScene()
+    {
+        if (!string.IsNullOrEmpty(sceneName))
+        {
+            SceneManager.LoadScene(sceneName);
+        }
+        else
+        {
+            Debug.LogError("Scene name is not assigned.");
+        }
+    }
+    private void PreviousScene()
+    {
+        if (!string.IsNullOrEmpty(PreviousSceneName))
+        {
+            SceneManager.LoadScene(PreviousSceneName);
+        }
+        else
+        {
+            Debug.LogError("Scene name is not assigned.");
+        }
+    }
+    public void ExitGame()
+    {
+        // Works in built application
+        Application.Quit();
+
+        // For testing in the Unity Editor
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
+    }
+
+  
+}

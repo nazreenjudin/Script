@@ -1,0 +1,76 @@
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.Video;
+using TMPro;
+
+public class VideoControlUI : MonoBehaviour
+{
+    public VideoPlayer videoPlayer;
+    public Button startPauseButton;
+    public Button replayButton;
+    public TMP_Text startPauseButtonText;
+    public AudioSource clickSound;  // 🔊 Add this line
+  
+
+    private bool isPlaying = false;
+
+    void Start()
+    {
+        videoPlayer.Pause(); // Start paused
+        startPauseButtonText.text = "Start";
+
+        startPauseButton.onClick.AddListener(OnStartPauseClicked);
+        replayButton.onClick.AddListener(OnReplayClicked);
+
+        videoPlayer.loopPointReached += OnVideoEnded;
+
+        
+    }
+
+    void OnStartPauseClicked()
+    {
+
+        PlayClick();  // 🔊 Play sound
+        if (!isPlaying)
+        {
+            videoPlayer.Play();
+            isPlaying = true;
+            startPauseButtonText.text = "Pause";
+        }
+        else
+        {
+            
+            videoPlayer.Pause();
+            isPlaying = false;
+            startPauseButtonText.text = "Play";
+        }
+
+
+    }
+
+    void OnReplayClicked()
+    {
+        PlayClick();  // 🔊 Play sound
+        videoPlayer.Stop();
+        videoPlayer.Play();
+        isPlaying = true;
+        startPauseButtonText.text = "Pause";
+    }
+
+    void OnVideoEnded(VideoPlayer vp)
+    {
+        PlayClick();  // 🔊 Play sound
+        isPlaying = false;
+        startPauseButtonText.text = "Start";
+    }
+
+    void PlayClick()
+    {
+        if (clickSound != null)
+        {
+            clickSound.PlayOneShot(clickSound.clip);
+        }
+    }
+
+   
+}

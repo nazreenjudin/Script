@@ -1,0 +1,49 @@
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class FadeScript : MonoBehaviour
+{
+    private void Start()
+    {
+        StartCoroutine(FadeSequence());
+        Invoke("FadeSequence", waitTime);
+    }
+    public string EneterenceSceneName = "Scene1";
+    public CanvasGroup canvasGroup;
+    public float fadeInTime;
+    public float stayTime;
+    public float fadeOutTime;
+    public string nextScene = "Scene1";
+    public float waitTime;
+
+    
+    private System.Collections.IEnumerator FadeSequence()
+    {
+        // Start fully transparent
+        canvasGroup.alpha = 0;
+
+        // Fade In
+        float t = 0;
+        while (t < fadeInTime)
+        {
+            t += Time.deltaTime;
+            canvasGroup.alpha = Mathf.Lerp(0, 1, t / fadeInTime);
+            yield return null;
+        }
+
+        // Wait
+        yield return new WaitForSeconds(stayTime);
+
+        // Fade Out
+        t = 0;
+        while (t < fadeOutTime)
+        {
+            t += Time.deltaTime;
+            canvasGroup.alpha = Mathf.Lerp(1, 0, t / fadeOutTime);
+            yield return null;
+        }
+
+        // Load main scene
+        SceneManager.LoadScene(EneterenceSceneName);
+    }
+}
